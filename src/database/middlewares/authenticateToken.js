@@ -6,7 +6,7 @@ const secret = process.env.JWT_SECRET;
 const authenticateToken = async (req, res, next) => {
   try {
     const { authorization } = req.headers;
-    console.log(authorization);
+    
     if (!authorization) {
       return res.status(STATUS_UNAUTHORIZED).json({ message: 'Token not found' });
     }
