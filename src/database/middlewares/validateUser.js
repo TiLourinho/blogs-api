@@ -1,5 +1,5 @@
-const { userSchema } = require('../../schemas/user');
-const { STATUS_BAD_REQUEST } = require('../../utils/statusCodes');
+const { userSchema } = require('../schemas/user');
+const { STATUS_BAD_REQUEST } = require('../utils/statusCodes');
 
 const validateUser = (req, _res, next) => {
   const { displayName, email, password } = req.body;

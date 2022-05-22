@@ -1,6 +1,6 @@
 const UserService = require('../services/UserService');
-const generateJWT = require('../../utils/generateJWT');
-const { STATUS_CREATED } = require('../../utils/statusCodes');
+const generateJWT = require('../utils/generateJWT');
+const { STATUS_CREATED } = require('../utils/statusCodes');
 
 const create = async (req, res) => {
   try {

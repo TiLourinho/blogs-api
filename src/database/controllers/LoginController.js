@@ -1,6 +1,6 @@
 const LoginService = require('../services/LoginService');
-const generateJWT = require('../../utils/generateJWT');
-const { STATUS_OK } = require('../../utils/statusCodes');
+const generateJWT = require('../utils/generateJWT');
+const { STATUS_OK } = require('../utils/statusCodes');
 
 const login = async (req, res) => {
   try {

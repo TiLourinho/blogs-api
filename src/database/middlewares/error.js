@@ -1,4 +1,4 @@
-const { STATUS_INTERNAL_SERVER_ERROR } = require('../../utils/statusCodes');
+const { STATUS_INTERNAL_SERVER_ERROR } = require('../utils/statusCodes');
 
 const errorMiddleware = (err, _req, res, _next) => {
     if (err.status) {

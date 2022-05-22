@@ -1,6 +1,6 @@
 const { User } = require('../models');
-const errorHandler = require('../../utils/errorHandler');
-const { STATUS_BAD_REQUEST } = require('../../utils/statusCodes');
+const errorHandler = require('../utils/errorHandler');
+const { STATUS_BAD_REQUEST } = require('../utils/statusCodes');
 
 const login = async (email, password) => {
   if (email.length === 0 || password.length === 0) {

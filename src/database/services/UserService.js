@@ -1,6 +1,6 @@
 const { User } = require('../models');
-const errorHandler = require('../../utils/errorHandler');
-const { STATUS_CONFLICT } = require('../../utils/statusCodes');
+const errorHandler = require('../utils/errorHandler');
+const { STATUS_CONFLICT } = require('../utils/statusCodes');
 
 const create = async (displayName, email, password, image) => {
   const checkUser = await User.findOne({
