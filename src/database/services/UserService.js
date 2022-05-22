@@ -1,6 +1,6 @@
 const { User } = require('../models');
 const errorHandler = require('../utils/errorHandler');
-const { STATUS_CONFLICT } = require('../utils/statusCodes');
+const { STATUS_CONFLICT, STATUS_NOT_FOUND } = require('../utils/statusCodes');
 
 const create = async (displayName, email, password, image) => {
   const checkUser = await User.findOne({
@@ -24,7 +24,20 @@ const getAll = async () => {
   return users;
 };
 
+const getById = async (id) => {
+  const user = await User.findOne({
+    where: { id },
+    attributes: { exclude: ['password'] },
+  });
+
+  if (!user) {
+    throw errorHandler(STATUS_NOT_FOUND, 'User does not exist');
+  }
+  return user;
+};
+
 module.exports = {
   create,
   getAll,
+  getById,
 };
