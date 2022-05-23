@@ -26,11 +26,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       published: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE
       },
       updated: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.DATE
       }
     });
