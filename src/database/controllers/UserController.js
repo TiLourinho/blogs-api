@@ -1,6 +1,6 @@
 const UserService = require('../services/UserService');
 const generateJWT = require('../utils/generateJWT');
-const { STATUS_CREATED, STATUS_OK } = require('../utils/statusCodes');
+const { STATUS_CREATED, STATUS_OK, STATUS_NO_CONTENT } = require('../utils/statusCodes');
 
 const create = async (req, res, next) => {
   try {
@@ -41,8 +41,22 @@ const getById = async (req, res, next) => {
   }
 };
 
+const remove = async (req, res, next) => {
+  try {
+    const { id } = req.user;
+    await UserService.remove(id);
+    console.log('req.user', req.user);
+
+    return res.status(STATUS_NO_CONTENT).end();
+  } catch (error) {
+    console.error('remove', error.message);
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  remove,
 };
