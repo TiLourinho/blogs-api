@@ -34,8 +34,23 @@ const getById = async (req, res) => {
 
     return res.status(STATUS_OK).json(post);
   } catch (error) {
-    console.error('getAll', error.message);
+    console.error('getById', error.message);
     return res.status(error.status).json({ message: error.message });
+  }
+};
+
+const update = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+    const { title, content } = req.body;
+    const post = await PostService.update(title, content, id, userId);
+
+    return res.status(STATUS_OK).json(post);
+  } catch (error) {
+    console.error('update', error.message);
+    // return res.status(error.status).json({ message: error.message });
+    next(error);
   }
 };
 
@@ -43,4 +58,5 @@ module.exports = {
   create,
   getAll,
   getById,
+  update,
 };
