@@ -6,6 +6,7 @@ const { STATUS_NOT_FOUND, STATUS_BAD_REQUEST,
   STATUS_UNAUTHORIZED } = require('../utils/statusCodes');
 
 const sequelize = new Sequelize(config.development);
+const { Op } = Sequelize;
 
 const getByTitle = async (title) => {
   const post = await BlogPost.findOne({
@@ -101,6 +102,22 @@ const remove = async (id, userId) => {
   return result;
 };
 
+const search = async (query) => {
+  const post = await BlogPost.findAll({
+    where: {
+      [Op.or]: [
+        { title: { [Op.like]: `%${query}%` } },
+        { content: { [Op.like]: `%${query}%` } },
+    ] },
+    include: [
+      { model: User, as: 'user', attributes: { exclude: ['password'] } },
+      { model: Category, as: 'categories', through: { attributes: [] } },
+    ],
+  });
+
+  return post;
+};
+
 module.exports = {
   getByTitle,
   create,
@@ -108,4 +125,5 @@ module.exports = {
   getById,
   update,
   remove,
+  search,
 };
