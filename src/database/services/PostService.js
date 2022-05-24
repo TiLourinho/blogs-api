@@ -1,4 +1,4 @@
-const { BlogPost, User, Category } = require('../models');
+const { BlogPost, User, Category, PostCategory } = require('../models');
 const errorHandler = require('../utils/errorHandler');
 const { STATUS_NOT_FOUND, STATUS_BAD_REQUEST,
   STATUS_UNAUTHORIZED } = require('../utils/statusCodes');
@@ -52,14 +52,18 @@ const getById = async (id) => {
   return post;
 };
 
-const update = async (title, content, id, userId) => {
-  const checkUser = await BlogPost.findOne({
+const checkUser = async (id, userId) => {
+  const post = await BlogPost.findOne({
     where: { id },
   });
 
-  if (!checkUser || checkUser.userId !== userId) {
+  if (!post || post.userId !== userId) {
     throw errorHandler(STATUS_UNAUTHORIZED, 'Unauthorized user');
   }
+};
+
+const update = async (title, content, id, userId) => {
+  await checkUser(id, userId);
 
   await BlogPost.update(
     { title, content },
@@ -71,10 +75,27 @@ const update = async (title, content, id, userId) => {
   return postUpdated;
 };
 
+const remove = async (id, userId) => {
+  const checkPost = await BlogPost.findByPk(id);
+
+  if (!checkPost) {
+    throw errorHandler(STATUS_NOT_FOUND, 'Post does not exist');
+  }
+
+  await checkUser(id, userId);
+
+  const post = await PostCategory.destroy({
+    where: { postId: id },
+  });
+
+  return post;
+};
+
 module.exports = {
   getByTitle,
   create,
   getAll,
   getById,
   update,
+  remove,
 };
