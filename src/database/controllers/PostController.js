@@ -1,7 +1,7 @@
 const PostService = require('../services/PostService');
 const { STATUS_CREATED, STATUS_OK } = require('../utils/statusCodes');
 
-const create = async (req, res) => {
+const create = async (req, res, next) => {
   try {
     const { id } = req.user;
     const { title, content, categoryIds } = req.body;
@@ -12,22 +12,22 @@ const create = async (req, res) => {
     return res.status(STATUS_CREATED).json(post);
   } catch (error) {
     console.error('create', error.message);
-    return res.status(error.status).json({ message: error.message });
+    next(error);
   }
 };
 
-const getAll = async (req, res) => {
+const getAll = async (_req, res, next) => {
   try {
     const posts = await PostService.getAll();
 
     return res.status(STATUS_OK).json(posts);
   } catch (error) {
     console.error('getAll', error.message);
-    return res.status(error.status).json({ message: error.message });
+    next(error);
   }
 };
 
-const getById = async (req, res) => {
+const getById = async (req, res, next) => {
   try {
     const { id } = req.params;
     const post = await PostService.getById(id);
@@ -35,7 +35,7 @@ const getById = async (req, res) => {
     return res.status(STATUS_OK).json(post);
   } catch (error) {
     console.error('getById', error.message);
-    return res.status(error.status).json({ message: error.message });
+    next(error);
   }
 };
 
@@ -49,7 +49,6 @@ const update = async (req, res, next) => {
     return res.status(STATUS_OK).json(post);
   } catch (error) {
     console.error('update', error.message);
-    // return res.status(error.status).json({ message: error.message });
     next(error);
   }
 };
