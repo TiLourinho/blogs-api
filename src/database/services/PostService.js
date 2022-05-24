@@ -2,6 +2,14 @@ const { BlogPost, User, Category } = require('../models');
 const errorHandler = require('../utils/errorHandler');
 const { STATUS_NOT_FOUND } = require('../utils/statusCodes');
 
+const getByTitle = async (title) => {
+  const post = await BlogPost.findOne({
+    where: { title },
+  });
+
+  return post;
+};
+
 const create = async (title, content, categoryIds, userId) => {
   const post = await BlogPost.create({ title, content, userId });
   await post.addCategory(categoryIds);
@@ -36,6 +44,7 @@ const getById = async (id) => {
 };
 
 module.exports = {
+  getByTitle,
   create,
   getAll,
   getById,

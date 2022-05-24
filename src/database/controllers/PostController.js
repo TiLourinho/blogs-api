@@ -5,7 +5,9 @@ const create = async (req, res) => {
   try {
     const { id } = req.user;
     const { title, content, categoryIds } = req.body;
-    const post = await PostService.create(title, content, categoryIds, id);
+    await PostService.create(title, content, categoryIds, id);
+
+    const post = await PostService.getByTitle(title);
 
     return res.status(STATUS_CREATED).json(post);
   } catch (error) {
