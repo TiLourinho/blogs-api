@@ -1,6 +1,6 @@
 const { BlogPost, User, Category } = require('../models');
 const errorHandler = require('../utils/errorHandler');
-const { STATUS_NOT_FOUND } = require('../utils/statusCodes');
+const { STATUS_NOT_FOUND, STATUS_BAD_REQUEST } = require('../utils/statusCodes');
 
 const getByTitle = async (title) => {
   const post = await BlogPost.findOne({
@@ -11,6 +11,14 @@ const getByTitle = async (title) => {
 };
 
 const create = async (title, content, categoryIds, userId) => {
+  const checkCategories = await Category.findAll({
+    where: { id: categoryIds },
+  });
+
+  if (!checkCategories.length) {
+    throw errorHandler(STATUS_BAD_REQUEST, '"categoryIds" not found');
+  }
+
   const post = await BlogPost.create({ title, content, userId });
   await post.addCategory(categoryIds);
 
@@ -43,9 +51,18 @@ const getById = async (id) => {
   return post;
 };
 
+// const update = async (title, content, id) => {
+//   const checkPost = await getById(id);
+
+//   if (!checkPost) {
+
+//   }
+// };
+
 module.exports = {
   getByTitle,
   create,
   getAll,
   getById,
+  // update,
 };
