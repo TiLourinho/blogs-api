@@ -1,5 +1,5 @@
 const PostService = require('../services/PostService');
-const { STATUS_CREATED, STATUS_OK } = require('../utils/statusCodes');
+const { STATUS_CREATED, STATUS_OK, STATUS_NO_CONTENT } = require('../utils/statusCodes');
 
 const create = async (req, res, next) => {
   try {
@@ -53,9 +53,23 @@ const update = async (req, res, next) => {
   }
 };
 
+const remove = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+    await PostService.remove(id, userId);
+
+    return res.status(STATUS_NO_CONTENT).end();
+  } catch (error) {
+    console.error('remove', error.message);
+    next(error);
+  }
+};
+
 module.exports = {
   create,
   getAll,
   getById,
   update,
+  remove,
 };
