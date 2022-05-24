@@ -21,11 +21,24 @@ const getAll = async (req, res) => {
     return res.status(STATUS_OK).json(posts);
   } catch (error) {
     console.error('getAll', error.message);
-    return res.status(500).json({ message: error.message });
+    return res.status(error.status).json({ message: error.message });
+  }
+};
+
+const getById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await PostService.getById(id);
+
+    return res.status(STATUS_OK).json(post);
+  } catch (error) {
+    console.error('getAll', error.message);
+    return res.status(error.status).json({ message: error.message });
   }
 };
 
 module.exports = {
   create,
   getAll,
+  getById,
 };
