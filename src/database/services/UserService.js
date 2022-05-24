@@ -1,6 +1,10 @@
-const { User } = require('../models');
+const Sequelize = require('sequelize');
+const config = require('../config/config');
+const { User, BlogPost } = require('../models');
 const errorHandler = require('../utils/errorHandler');
 const { STATUS_CONFLICT, STATUS_NOT_FOUND } = require('../utils/statusCodes');
+
+const sequelize = new Sequelize(config.development);
 
 const create = async (displayName, email, password, image) => {
   const checkUser = await User.findOne({
@@ -36,8 +40,23 @@ const getById = async (id) => {
   return user;
 };
 
+const remove = async (id) => {
+  const result = await sequelize.transaction(async (t) => {
+    await User.destroy({
+      where: { id },
+    }, { transaction: t });
+
+    await BlogPost.destroy({
+      where: { userId: id },
+    }, { transaction: t });
+  });
+
+  return result;
+};
+
 module.exports = {
   create,
   getAll,
   getById,
+  remove,
 };
