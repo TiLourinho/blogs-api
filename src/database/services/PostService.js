@@ -1,6 +1,7 @@
 const { BlogPost, User, Category } = require('../models');
 const errorHandler = require('../utils/errorHandler');
-const { STATUS_NOT_FOUND, STATUS_BAD_REQUEST } = require('../utils/statusCodes');
+const { STATUS_NOT_FOUND, STATUS_BAD_REQUEST,
+  STATUS_UNAUTHORIZED } = require('../utils/statusCodes');
 
 const getByTitle = async (title) => {
   const post = await BlogPost.findOne({
@@ -51,18 +52,29 @@ const getById = async (id) => {
   return post;
 };
 
-// const update = async (title, content, id) => {
-//   const checkPost = await getById(id);
+const update = async (title, content, id, userId) => {
+  const checkUser = await BlogPost.findOne({
+    where: { id },
+  });
 
-//   if (!checkPost) {
+  if (!checkUser || checkUser.userId !== userId) {
+    throw errorHandler(STATUS_UNAUTHORIZED, 'Unauthorized user');
+  }
 
-//   }
-// };
+  await BlogPost.update(
+    { title, content },
+    { where: { id } },
+  );
+
+  const postUpdated = await getById(id);
+
+  return postUpdated;
+};
 
 module.exports = {
   getByTitle,
   create,
   getAll,
   getById,
-  // update,
+  update,
 };
