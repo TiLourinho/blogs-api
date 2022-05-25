@@ -1,11 +1,9 @@
 const Sequelize = require('sequelize');
-const config = require('../config/config');
 const { BlogPost, User, Category, PostCategory } = require('../models');
 const errorHandler = require('../utils/errorHandler');
 const { STATUS_NOT_FOUND, STATUS_BAD_REQUEST,
   STATUS_UNAUTHORIZED } = require('../utils/statusCodes');
 
-const sequelize = new Sequelize(config.development);
 const { Op } = Sequelize;
 
 const getByTitle = async (title) => {
@@ -89,17 +87,9 @@ const remove = async (id, userId) => {
 
   await checkUser(id, userId);
 
-  const result = await sequelize.transaction(async (t) => {
-    await PostCategory.destroy({
-      where: { postId: id },
-    }, { transaction: t });
-
-    await BlogPost.destroy({
-      where: { id },
-    }, { transaction: t });
+  await PostCategory.destroy({
+    where: { postId: id },
   });
-
-  return result;
 };
 
 const search = async (query) => {
