@@ -45,7 +45,6 @@ const remove = async (req, res, next) => {
   try {
     const { id } = req.user;
     await UserService.remove(id);
-    console.log('req.user', req.user);
 
     return res.status(STATUS_NO_CONTENT).end();
   } catch (error) {
